@@ -1,0 +1,22 @@
+1. Kamyonların bekleme sırasında neden Stack yerine Queue kullanılmıştır?
+Kamyonlar bekleme alanına geliş sırasına göre rampaya alınmalıdır. İlk gelen kamyonun ilk çıkması gerektiği için Queue (kuyruk) kullanılmıştır. Queue, FIFO (First In First Out) mantığıyla çalışır. Yani ilk eklenen eleman ilk çıkarılır.
+
+
+2. Paketlerin yönetiminde neden Queue yerine Stack kullanılmıştır?
+Paketler kamyona üst üste yüklendiği için en son yüklenen pakete ilk ulaşılır. Bu nedenle Stack (yığın) kullanılmıştır. Stack, LIFO (Last In First Out) mantığıyla çalışır. Kodda push() ile paket yüklenir, pop() ile en üstteki paket indirilir.
+
+
+3. Stack yapısındaki push ve pop işlemlerinin zaman karmaşıklığı nedir?
+Her iki işlemin de zaman karmaşıklığı \(O(1)\)'dir. Çünkü push() yeni elemanı yığının en üstüne ekler, pop() ise en üstteki elemanı çıkarır. Eleman sayısı artsa bile bu işlemler için tüm yığını dolaşmak gerekmez.
+
+
+4. Queue yapısındaki enqueue ve dequeue işlemlerinin zaman karmaşıklığı nedir?
+Her iki işlemin de zaman karmaşıklığı \(O(1)\)'dir. enqueue() yeni kamyonu kuyruğun sonuna ekler. dequeue() ise kuyruğun başındaki kamyonu çıkarır. Kodda head ve tail referansları kullanıldığı için tüm elemanların üzerinden geçmeye gerek kalmaz.
+
+
+5. Stack'in en altında bulunan bir elemana erişmenin neden zor olduğunu açıklayınız.
+Stack, LIFO mantığıyla çalıştığı için elemanlara yalnızca en üstten erişilebilir. En alttaki elemana ulaşmak için üstündeki elemanların önce çıkarılması gerekir. Bu kodda pop() işlemi sadece top elemanını çıkarabildiğinden, alttaki elemana doğrudan erişilemez.
+
+
+6. Stack ve Queue yapılarının Python listeleri kullanılarak gerçekleştirilmesi mümkün müdür?
+Evet, her iki veri yapısı da Python listeleri kullanılarak gerçekleştirilebilir. Stack için append() ile eleman eklenip pop() ile son eleman çıkarılabilir. Queue için append() ile sona eleman eklenip pop(0) ile baştaki eleman çıkarılabilir. Ancak listede pop(0) işlemi elemanları kaydırmayı gerektirdiğinden \(O(n)\) zaman alır. Bu yüzden kuyruk işlemlerinde collections.deque kullanmak daha verimlidir. Bu kodda ise Stack ve Queue, bağlı liste kullanılarak oluşturulmuştur.
