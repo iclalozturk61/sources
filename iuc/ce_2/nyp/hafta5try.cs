@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using System.Reflection.PortableExecutable;
-
+using System.IO;
 enum Department
 {
     Software, 
@@ -11,55 +9,55 @@ enum Department
 
 abstract class Employee
 {
-    public string name {get; set;}
-    public Department department {get; set;}
+    public string Name {get; set;}
+    public Department Department {get; set;}
 
     public Employee (string  name, Department department)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("isim değeri boş bırakılamaz");
         
-        name = name;
-        department = department;
+        Name = name;
+        Department = department;
     }
 
-    public abstract int CalculateSalary(){} 
+    public abstract int CalculateSalary();
 
     public virtual void DisplayInfo()
     {
-        Console.WriteLine($"{name}, {department} alanında çalışmaktadır.");
+        Console.WriteLine($"{Name}, {Department} alanında çalışmaktadır.");
     }
 }
 
 class FullTimeEmployee : Employee
 {
-    public int mounthlySalary{get; set;}
+    public int MounthlySalary{get; set;}
 
     public FullTimeEmployee(string name, Department department, int salary) : base(name, department)
     {
         if(salary <=0)
             throw new ArgumentException("aylık maaş değeri 0 dan büyük olmalıdır");
 
-        mounthlySalary = salary;
+        MounthlySalary = salary;
     }
 
     public override int CalculateSalary()
     {
-        return mounthlySalary;
+        return MounthlySalary;
     }
 
     public override void DisplayInfo()
     {
-        Console.WriteLine($"{name}, {department} alanındda {mounthlySalary} maaşına çalışmaktadır.");
+        Console.WriteLine($"{Name}, {Department} alanındda {MounthlySalary} maaşına çalışmaktadır.");
     }
 }
 
 class PartTimeEmployee : Employee
 {
-    public int hour {get;}
-    public int hourlyRate { get;}
+    public int Hour {get;}
+    public int HourlyRate { get;}
 
-    public PartTimeEmployee(string n, Department d, int hourlyRate, int hour) : base(name, department)
+    public PartTimeEmployee(string name, Department department, int hourlyRate, int hour) : base(name, department)
     {
         if (hourlyRate <= 0)
             throw new ArgumentException("saatlik ücret 0'dan küçük olamaz.");
@@ -68,17 +66,20 @@ class PartTimeEmployee : Employee
         {
             throw new ArgumentException("saatlik ücret 0'dan büyük olmalıdır.");
         }
+
+        HourlyRate = hourlyRate;
+        Hour = hour;
     }
 
     public override int CalculateSalary()
     {
-        int totalSalary = hour*hourlyRate;
+        int totalSalary = Hour*HourlyRate;
         return totalSalary;
     }
 
     public override void DisplayInfo()
     {
-        Console.WriteLine($"{name}, {department}, alanında saat başı {hourlyRate} ücretine, {hour} saat çalışmaktadır.");
+        Console.WriteLine($"{Name}, {Department}, alanında saat başı {HourlyRate} ücretine, {Hour} saat çalışmaktadır.");
     }
 }
 
@@ -88,14 +89,23 @@ class Program
     {
         List<Employee> employees = new List<Employee>
         {
-            new emp1 ("ahmet", Software, 50000),
-            new emp2 ("ayşe", Department.HumanResources, 300, 80),
+            new FullTimeEmployee("ahmet", Department.Software, 50000),
+            new PartTimeEmployee("ayşe", Department.HumanResources, 300, 80),
         };
+
+        string report = "";
 
         foreach(Employee employee in employees)
         {
             employee.DisplayInfo();
-            employee.CalculateSalary();
+            Console.WriteLine(employee.CalculateSalary());
+            report += $"{employee.Name} - {employee.Department} - {employee.CalculateSalary()} TL" + Environment.NewLine;
         }
+        File.WriteAllText("salary_report.txt", report);
+
+
+        string fileContent = File.ReadAllText("salary_report.txt");
+        Console.WriteLine(fileContent);
+        Console.WriteLine(Path.GetFullPath("salary_report.txt"));
     }
 }
